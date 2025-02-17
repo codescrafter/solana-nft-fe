@@ -27,7 +27,7 @@
     "@tailwindcss/typography": "^0.5.9",
     "bs58": "^6.0.0",
     "daisyui": "^1.24.3",
-    "date-fns": "^2.29.3",
+    "date-fns": "^4.1.0",
     "fs": "0.0.1-security",
     "immer": "^9.0.12",
     "next": "^13.1.5",
