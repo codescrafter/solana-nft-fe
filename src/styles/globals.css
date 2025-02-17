@@ -2,26 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-image: radial-gradient(
-    circle farthest-side at 50% 100%,rgba(1, 9, 18, 0),
-    rgba(1, 6, 14, 0.6) 36%,
-    rgba(1, 14, 29, 0.6) 55%,
-    rgba(49, 18, 93, 0.4));
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
+}
+
+.wallet-adapter-button-trigger {
+  background: radial-gradient(50.91% 97.54% at 50% 2.46%, #ffb866 0%, #ff8800 100%);
+  position: relative;
+  box-shadow: 0px 21px 39.3px rgba(255, 77, 0, 0.22);
+  color: #fff;
+  text-shadow: 0px 2px 2px rgba(255, 77, 0, 0.7);
+}
+
+.wallet-adapter-button-trigger::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 12px;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+}
+.wallet-adapter-button-trigger:hover {
+  background: linear-gradient(180deg, #ff8800 0%, #ffb866 100%);
 }
 
 /* example: override wallet button style */
@@ -29,3 +43,79 @@ a {
   background-color: #707070;
 }
 
+.container-wrap {
+  @apply w-full max-w-3xl mmd:max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-5 2xl:px-0;
+}
+
+.heading {
+  @apply text-3xl xxs:text-4xl lg:text-5xl xl:text-[64px] font-bold leading-10 lg:leading-[65px] xl:leading-[96px] text-white;
+}
+
+.mint-button {
+  background: radial-gradient(50.91% 97.54% at 50% 2.46%, #ffb866 0%, #ff8800 100%);
+  position: relative;
+  box-shadow: 0px 21px 39.3px rgba(255, 77, 0, 0.22);
+  color: #fff;
+  text-shadow: 0px 2px 2px rgba(255, 77, 0, 0.7);
+}
+
+.mint-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 12px;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+}
+
+.mint-button:hover {
+  background: linear-gradient(180deg, #ff8800 0%, #ffb866 100%);
+}
+
+.linear-header-text {
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(90deg, #0d0d0d 0.58%, #ffffff 52.28%, #0d0d0d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-content {
+  animation: marquee 200s linear infinite;
+}
+
+.sidebar {
+  position: fixed;
+  /* top: 0; */
+  right: -100%; /* Initially hide sidebar off-screen */
+  width: 100%;
+  height: 100%;
+  background-color: #0c0c0c;
+  /* background-image: url("/public/images/header/sidebar-bg.webp"); */
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  transition: right 0.4s ease-in-out, transform 0.4s ease-in-out;
+  transform: translateX(0); /* Prevent unnecessary movement */
+  z-index: 100; /* Ensure sidebar is on top of content but below the button */
+}
+
+.sidebar.open {
+  right: 0; /* Slide in from the right */
+}
+
+.sidebar.close {
+  right: -100%; /* Slide out to the right */
+}
