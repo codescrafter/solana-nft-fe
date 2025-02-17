@@ -3,6 +3,7 @@ import Head from "next/head";
 import { BasicsView } from "../views";
 
 const Basics: NextPage = (props) => {
+  
   return (
     <div>
       <Head>
