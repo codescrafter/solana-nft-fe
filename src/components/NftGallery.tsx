@@ -8,8 +8,7 @@ import useUserSOLBalanceStore from "stores/useUserSOLBalanceStore";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 const Marketplace = () => {
-  const wallet = useWallet();
-  const balance = useUserSOLBalanceStore((s) => s.balance);
+
 
   const [activeCard, setActiveCard] = useState<string | null>(null);
   const [selectedCategoryAddress, setSelectedCategoryAddress] = useState<string>(
@@ -35,14 +34,6 @@ const Marketplace = () => {
       <div className="container-wrap mt-[113px] relative z-10">
         <div className="flex flex-col mt-2">
           <CandyMint />
-          <h4 className="md:w-full text-2xl text-slate-300 my-2">
-            {wallet && (
-              <div className="flex flex-row justify-center">
-                <div>{(balance || 0).toLocaleString()}</div>
-                <div className="text-slate-600 ml-2">SOL</div>
-              </div>
-            )}
-          </h4>
         </div>
         <div>
           <h2 className="heading mb-12 w-full max-w-[936px] text-center md:text-left uppercase">
