@@ -49,11 +49,11 @@ const Header = () => {
               </div>
             </div>
 
-            <div className="hidden absolute -right-[45%] top-[18%] lg:flex items-center">
+            <div className="hidden absolute -right-[20%] top-[18%] lg:flex items-center">
               <Image
                 src="/images/vector.svg"
-                className=""
-                width={100}
+                className="object-contain"
+                width={150}
                 height={100}
                 alt="vector"
                 priority

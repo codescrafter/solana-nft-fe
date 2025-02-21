@@ -40,7 +40,6 @@ export const HomeView: FC = ({}) => {
       <Royalties />
       <Marketplace />
       <MyFooter />
-      <NFTHoldersTable />
 
       {/* <div className="md:hero-content flex flex-col">
         <div className="mt-6">

@@ -11,6 +11,10 @@ export const NAVIGATION = [
     name: "NFT Gallery",
     href: "/nfts",
   },
+  {
+    name: "Nft Holders",
+    href: "/nft-holders",
+  },
 ];
 
 export const NFT_CATEGORIES = [

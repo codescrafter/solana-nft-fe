@@ -28,6 +28,8 @@ export const CandyMint: FC = () => {
   const wallet = useWallet();
   const balance = useUserSOLBalanceStore((s) => s.balance);
 
+  const [isModalOpen, setModalOpen] = useState(false);
+
   const umi = useMemo(
     () =>
       createUmi(quicknodeEndpoint)
@@ -160,7 +162,7 @@ export const CandyMint: FC = () => {
             />
           </div>
           <div className="text-white">
-            <table className="table-auto w-full border-collapse">
+            {/* <table className="table-auto w-full border-collapse">
               <tbody>
                 {[
                   { label: "Creator", value: nftMetadata?.name },
@@ -176,23 +178,36 @@ export const CandyMint: FC = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
-
-            <div className="flex gap-5 items-center mt-1">
-              <p className="mt-4 text-sm font-semibold">Attributes:</p>
-              {nftMetadata?.attributes?.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {nftMetadata.attributes.map((attr, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 text-sm font-medium bg-gray-800 border border-gray-700 rounded-lg"
-                    >
-                      {attr.trait_type}: {attr.value}
-                    </span>
-                  ))}
-                </div>
-              )}
+            </table> */}
+            <div className="w-[536px]">
+              <h2 className="text-4xl font-medium text-center text-white mb-6">
+                {nftMetadata?.name}
+              </h2>
+              <p className="text-white text-xl text-center font-normal mb-5">
+                {nftMetadata?.description}
+              </p>
+              <p className="text-white text-xl text-center font-normal">
+                Royalties: {nftMetadata?.sellerFeeBasisPoints / 100}%
+              </p>
             </div>
+
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={() => setModalOpen(true)}
+                className="px-4 py-2 border border-white transition-all duration-200"
+              >
+                Attributes
+              </button>
+            </div>
+
+            {/* Modal for Attributes */}
+            {nftMetadata?.attributes && (
+              <NftAttributesModal
+                attributes={nftMetadata.attributes}
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+              />
+            )}
 
             <button
               className="mint-button w-full mt-6 py-3 px-6 text-lg font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
@@ -201,9 +216,47 @@ export const CandyMint: FC = () => {
             >
               {isLoading ? "Loading..." : `Mint NFT (${nftPrice || "N/A"} SOL)`}
             </button>
+            <p className="text-red-400 text-base text-end font-normal mt-1">
+              Balance: {`${(balance || 0).toLocaleString()} SOL`}
+            </p>
           </div>
         </div>
       )}
     </div>
   );
 };
+
+function NftAttributesModal({ attributes, isOpen, onClose }) {
+  if (!isOpen) return null;
+
+  const handleOverlayClick = (e) => {
+    // Close modal if the click is on the overlay itself
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={handleOverlayClick}
+    >
+      <div className="bg-gray-900 text-white rounded-xl shadow-xl max-w-md w-full p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">NFT Attributes</h2>
+          <button onClick={onClose} className="text-gray-300 hover:text-white text-2xl font-bold">
+            &times;
+          </button>
+        </div>
+        <div className="space-y-3">
+          {attributes.map((attr, index) => (
+            <div key={index} className="flex justify-between border-b border-gray-700 pb-2">
+              <span className="font-semibold">{attr.trait_type}</span>
+              <span>{attr.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
