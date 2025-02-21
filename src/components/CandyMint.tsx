@@ -37,14 +37,18 @@ export const CandyMint: FC = () => {
     [wallet]
   );
 
+  console.log("nftMetadata-------------------//", nftMetadata);
+
   // Fetch the next available NFT's metadata and price
   const fetchNextNFTMetadata = useCallback(async () => {
     try {
       setIsLoading(true);
       const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
+      // console.log("candyMachine-------------------//", candyMachine);
 
       // Find the next available NFT (assuming items are sequential)
       const nextItem = candyMachine.items.find((item) => !item.minted);
+      // console.log("nextItem-------------------//", nextItem);
 
       if (nextItem) {
         // Fetch the metadata JSON from the URI
@@ -91,6 +95,8 @@ export const CandyMint: FC = () => {
       });
       return;
     }
+
+    debugger;
 
     // Fetch the Candy Machine.
     const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
@@ -140,58 +146,62 @@ export const CandyMint: FC = () => {
   ]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 mb-20">
-      <h2 className="heading relative text-center mmd:text-left uppercase mb-10">
-        <span className="text-primary">Mint</span> <br className="mmd:hidden" /> Now
+    <div className="">
+      <h2 className="heading relative text-center mmd:text-left uppercase mb-10 flex justify-center">
+        <span className="text-primary mr-2 inline-block">Mint </span> Now
       </h2>
       {nftMetadata && (
-        <div className="max-w-lg w-full p-6 border rounded-2xl shadow-xl">
-          <h2 className="text-2xl font-bold mb-4 text-center">{nftMetadata.name}</h2>
-          <img
-            src={nftMetadata.image}
-            alt={nftMetadata.name}
-            className="w-full h-64 object-cover rounded-lg shadow-md"
-          />
-          <p className="mt-4 text-center">{nftMetadata.description}</p>
-          <div className="flex justify-between">
-            {nftMetadata.attributes && (
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">Attributes:</h3>
-                <ul className="grid grid-cols-2 gap-3 mb-4">
-                  {nftMetadata.attributes.map((attr, index) => (
-                    <li key={index} className="p-2 border rounded-lg">
-                      <span className="font-semibold">{attr.trait_type}:</span> {attr.value}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {/* {nftPrice && (
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">Price:</h3>
-                <div className="flex flex-row justify-center">
-                  <div>{nftPrice.toLocaleString()}</div>
-                  <div className="text-slate-600 ml-2">SOL</div>
-                </div>
-              </div>
-            )} */}
-            {wallet && (
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">Balance:</h3>
-                <div className="flex flex-row justify-center">
-                  <div>{(balance || 0).toLocaleString()}</div>
-                  <div className="text-slate-600 ml-2">SOL</div>
-                </div>
-              </div>
-            )}
+        <div className="w-full p-6  max-w-[1120px] mx-auto bg-[#2C2C2C38] border  border-[##FFFFFF0D] rounded-[20px] shadow-xl flex flex-col md:flex-row items-center gap-6 justify-between">
+          <div className="max-w-[462px] h-[300px] md:h-[539px]">
+            <img
+              src={nftMetadata.image}
+              alt={nftMetadata.name}
+              className="w-full h-full object-cover rounded-lg shadow-md"
+            />
           </div>
-          <button
-            className="mint-button border w-[160px] border-secondary text-white py-2 px-6 font-semibold text-xl font-poppins rounded-xl flex items-center gap-2.5 cursor-pointer hover:scale-105 hover:transition-all ease-linear duration-200 active:scale-[1.02] mt-2 mmd:mt-0 flex justify-center w-full"
-            onClick={onClick}
-            disabled={isLoading || !nftMetadata}
-          >
-            {isLoading ? "Loading..." : `Mint NFT (${nftPrice} SOL)`}
-          </button>
+          <div className="text-white">
+            <table className="table-auto w-full border-collapse">
+              <tbody>
+                {[
+                  { label: "Creator", value: nftMetadata?.name },
+                  { label: "Description", value: nftMetadata?.description },
+                  { label: "Price", value: nftPrice ? `${nftPrice.toLocaleString()} SOL` : "N/A" },
+                  { label: "Balance", value: `${(balance || 0).toLocaleString()} SOL` },
+                  { label: "Symbol", value: nftMetadata?.symbol },
+                  { label: "Seller Points", value: nftMetadata?.sellerFeeBasisPoints },
+                ].map((item, index) => (
+                  <tr key={index} className="border-b border-gray-700">
+                    <td className="font-semibold py-2 lg:py-3 px-4">{item.label}:</td>
+                    <td className="py-2 px-4">{item.value || "N/A"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="flex gap-5 items-center mt-1">
+              <p className="mt-4 text-sm font-semibold">Attributes:</p>
+              {nftMetadata?.attributes?.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {nftMetadata.attributes.map((attr, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 text-sm font-medium bg-gray-800 border border-gray-700 rounded-lg"
+                    >
+                      {attr.trait_type}: {attr.value}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <button
+              className="mint-button w-full mt-6 py-3 px-6 text-lg font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
+              onClick={onClick}
+              disabled={isLoading || !nftMetadata}
+            >
+              {isLoading ? "Loading..." : `Mint NFT (${nftPrice || "N/A"} SOL)`}
+            </button>
+          </div>
         </div>
       )}
     </div>

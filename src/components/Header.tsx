@@ -18,7 +18,7 @@ const Header = () => {
           </p>
         </div>
         <div>
-          <div className="absolute left-1/2 top-[60%] sm:top-[57%] lg:top-1/2 transform -translate-x-1/2 -translate-y-[50%] z-10 flex justify-center lg:block w-full lg:w-auto">
+          <div className="absolute left-1/2 top-[60%] sm:top-[55%] lg:top-[48%] transform -translate-x-1/2 -translate-y-[50%] z-10 flex justify-center lg:block w-full lg:w-auto">
             <div className="hidden absolute -left-[40%] llg:-left-[45%] xxl:-left-[65%] 2xl:-left-[70%] top-[25%] text-dust w-full max-w-[290px] text-xl font-poppins lg:flex justify-between">
               <p>
                 NFTs That Pay You Back – Get Passive Rewards Earn While You Hold –{" "}

@@ -10,7 +10,7 @@ const NftCard = ({ nft }: { nft: any }) => {
   return (
     <div className="w-full 2xl:w-[297px] h-[360px] xs:h-[320px] 2xl:h-[360px] border border-[#181818] backdrop-blur-2xl rounded-xl px-2.5 py-3 relative overflow-hidden">
       <img
-        src={nft.collectionImage || nft.image}
+        src={nft.image}
         alt={"dfd"}
         className="w-full rounded-[14px] object-cover"
         width={297}
@@ -54,8 +54,6 @@ const Nfts = () => {
                 const collectionMetadata = await metaplex.nfts().findByMint({
                   mintAddress: nft.collection.address,
                 });
-
-                console.log("collectionMetadata--------", collectionMetadata);
 
                 collectionData.collectionName = collectionMetadata.name || "Unknown Collection";
                 collectionData.collectionImage = await fetch(collectionMetadata.uri)
