@@ -1,6 +1,8 @@
+import Image from "next/image";
+
 const Royalties = () => {
   return (
-    <div className="container-wrap mt-24">
+    <div className="container-wrap mt-24" id="royalties">
       <h2 className="heading relative top-8 text-center mmd:text-left uppercase">
         <span className="text-primary">Earn</span> <br className="mmd:hidden" /> While You Hold
       </h2>
@@ -20,10 +22,13 @@ const Royalties = () => {
           </button>
         </div>
         <div className="w-full max-w-[400px] sm:max-w-[611px] h-[400px] mmd:h-[440px] lg:h-[493px] relative top-7 mmd:top-0">
-          <img
+          <Image
             src="/images/royalties.webp"
             alt="defi alliance royalties"
             className="w-full h-full object-contain"
+            width={611}
+            height={493}
+            priority
           />
         </div>
       </div>

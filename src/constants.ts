@@ -1,15 +1,15 @@
 export const NAVIGATION = [
   {
     name: "Home",
-    href: "#home",
+    href: "/",
   },
   {
     name: "About",
-    href: "#about",
+    href: "/#about",
   },
   {
     name: "NFT Gallery",
-    href: "#nft-gallery",
+    href: "/nfts",
   },
 ];
 

@@ -3,12 +3,7 @@ import { FC, useCallback, useMemo, useState, useEffect } from "react";
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from "../stores/useUserSOLBalanceStore";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import {
-  generateSigner,
-  transactionBuilder,
-  publicKey,
-  some,
-} from "@metaplex-foundation/umi";
+import { generateSigner, transactionBuilder, publicKey, some } from "@metaplex-foundation/umi";
 import {
   fetchCandyMachine,
   mintV2,
@@ -18,15 +13,9 @@ import {
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
-import {
-  LAMPORTS_PER_SOL,
-  TransactionSignature,
-  clusterApiUrl,
-} from "@solana/web3.js";
-import * as bs58 from "bs58";
+import { LAMPORTS_PER_SOL, TransactionSignature, clusterApiUrl } from "@solana/web3.js";
 
-const quicknodeEndpoint =
-  process.env.NEXT_PUBLIC_RPC || clusterApiUrl("devnet");
+const quicknodeEndpoint = process.env.NEXT_PUBLIC_RPC || clusterApiUrl("devnet");
 const candyMachineAddress = publicKey(process.env.NEXT_PUBLIC_CANDY_MACHINE_ID);
 const treasury = publicKey(process.env.NEXT_PUBLIC_TREASURY);
 
@@ -69,7 +58,9 @@ export const CandyMint: FC = () => {
       // Fetch NFT price from Candy Guard
       const candyGuard = await safeFetchCandyGuard(umi, candyMachine.mintAuthority);
       if (candyGuard && candyGuard) {
-        setNftPrice(candyGuard?.guards.solPayment.value.lamports.basisPoints.toString()/1000000000);
+        setNftPrice(
+          candyGuard?.guards.solPayment.value.lamports.basisPoints.toString() / 1000000000
+        );
       }
     } catch (error) {
       console.error("Failed to fetch NFT metadata:", error);
@@ -104,10 +95,7 @@ export const CandyMint: FC = () => {
     // Fetch the Candy Machine.
     const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
     // Fetch the Candy Guard.
-    const candyGuard = await safeFetchCandyGuard(
-      umi,
-      candyMachine.mintAuthority
-    );
+    const candyGuard = await safeFetchCandyGuard(umi, candyMachine.mintAuthority);
     try {
       // Mint from the Candy Machine.
       const nftMint = generateSigner(umi);
@@ -124,7 +112,7 @@ export const CandyMint: FC = () => {
               solPayment: some({ destination: treasury }),
             },
           })
-        )
+        );
       const { signature } = await transaction.sendAndConfirm(umi, {
         confirm: { commitment: "finalized" },
       });
@@ -154,14 +142,11 @@ export const CandyMint: FC = () => {
   return (
     <div className="flex flex-col items-center justify-center p-6 mb-20">
       <h2 className="heading relative text-center mmd:text-left uppercase mb-10">
-        <span className="text-primary">Mint</span> <br className="mmd:hidden" />{" "}
-        Now
+        <span className="text-primary">Mint</span> <br className="mmd:hidden" /> Now
       </h2>
       {nftMetadata && (
         <div className="max-w-lg w-full p-6 border rounded-2xl shadow-xl">
-          <h2 className="text-2xl font-bold mb-4 text-center">
-            {nftMetadata.name}
-          </h2>
+          <h2 className="text-2xl font-bold mb-4 text-center">{nftMetadata.name}</h2>
           <img
             src={nftMetadata.image}
             alt={nftMetadata.name}
@@ -175,8 +160,7 @@ export const CandyMint: FC = () => {
                 <ul className="grid grid-cols-2 gap-3 mb-4">
                   {nftMetadata.attributes.map((attr, index) => (
                     <li key={index} className="p-2 border rounded-lg">
-                      <span className="font-semibold">{attr.trait_type}:</span>{" "}
-                      {attr.value}
+                      <span className="font-semibold">{attr.trait_type}:</span> {attr.value}
                     </li>
                   ))}
                 </ul>

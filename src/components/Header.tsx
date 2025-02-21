@@ -1,10 +1,12 @@
 import { CrownBottom, CrownTop } from "svg";
 import Navbar from "./Navbar";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Header = () => {
   return (
     <div className="bg-[url(/images/header_bg.webp)] bg-cover bg-center 2xl:bg-top overflow-x-hidden">
-      <div className="relative pt-8 mb-9">
+      <div className="relative mb-9">
         <Navbar />
         <h1 className="w-full max-w-[1320px] mx-auto linear-header-text text-center text-4xl xxs:text-[46px] xs:text-[52px] sm:text-[80px] md:text-[90px] lg:text-[120px] llg:text-[140px] xxl:text-[170px] font-semibold sm:leading-[72px] lg:leading-[294px] tracking-[-2px] mt-12 mb-5 lg:mt-0">
           DEFI ALLIANCE
@@ -24,13 +26,23 @@ const Header = () => {
               </p>
             </div>
             <div className="relative">
-              <img
-                src="images/defi-alliance-img.webp"
+              <Image
+                src="/images/defi-alliance-img.webp"
                 alt="defi alliance"
                 className="w-[327px] sm:w-[420px] lg:w-[540px] h-[375px] sm:h-[505px] lg:h-[617px] object-contain"
+                width={540}
+                height={617}
+                priority
               />
               <div className="lg:hidden absolute left-0 xxs:-left-[2%] xs:-left-[14%] md:-left-[8%] top-[20%]">
-                <img src="/images/vector-left.svg" className="w-[100px] xs:w-auto object-contain" />
+                <Image
+                  src="/images/vector-left.svg"
+                  className="w-[100px] xs:w-auto object-contain"
+                  width={100}
+                  height={100}
+                  alt="vector left"
+                  priority
+                />
                 <p className="text-dawn-pink text-left ml-1 md:ml-2 text-xs xs:text-sm">
                   50% Royalties
                 </p>
@@ -38,7 +50,14 @@ const Header = () => {
             </div>
 
             <div className="hidden absolute -right-[45%] top-[18%] lg:flex items-center">
-              <img src="/images/vector.svg" className="" />
+              <Image
+                src="/images/vector.svg"
+                className=""
+                width={100}
+                height={100}
+                alt="vector"
+                priority
+              />
               <p className="text-dawn-pink text-right relative top-5 leading-3 llg:left-5 text-xl">
                 50% Royalties
               </p>
@@ -113,20 +132,43 @@ const Header = () => {
 export default Header;
 
 function FloatingButtons() {
+  const router = useRouter();
+
   return (
     <div className="relative flex flex-col items-center space-y-2">
       {/* Button 1 */}
-      <button className="border border-white text-white px-4 py-2 rounded-lg transform">
+      <button
+        className="border border-white text-white px-4 py-2 rounded-lg transform"
+        onClick={() => {
+          router.push("/nfts");
+        }}
+      >
         Explore NFTs
       </button>
 
       {/* Button 2 */}
-      <button className="relative left-14 border border-white text-white px-4 py-2 rounded-lg transform">
+      <button
+        className="relative left-14 border border-white text-white px-4 py-2 rounded-lg transform"
+        onClick={() => {
+          const element = document.getElementById("royalties");
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }}
+      >
         Check Royalties
       </button>
 
       {/* Button 3 */}
-      <button className="border border-white text-white px-4 py-2 rounded-lg transform rotate-6">
+      <button
+        className="border border-white text-white px-4 py-2 rounded-lg transform rotate-6"
+        onClick={() => {
+          const element = document.getElementById("mint-now");
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }}
+      >
         Mint Now
       </button>
     </div>

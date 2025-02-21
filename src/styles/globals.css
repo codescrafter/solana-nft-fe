@@ -48,7 +48,7 @@ body {
 }
 
 .heading {
-  @apply text-3xl xxs:text-4xl lg:text-5xl xl:text-[64px] font-bold leading-10 lg:leading-[65px] xl:leading-[96px] text-white;
+  @apply text-3xl xxs:text-4xl lg:text-5xl xl:text-[64px] font-bold leading-10 lg:leading-[65px] xl:leading-[110px] text-white;
 }
 
 .mint-button {
