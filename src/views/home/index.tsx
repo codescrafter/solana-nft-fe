@@ -17,6 +17,7 @@ import About from "components/About";
 import Royalties from "components/Royalties";
 import Marketplace from "components/NftGallery";
 import MyFooter from "components/MyFooter";
+import NFTHoldersTable from "components/NFTTable";
 
 export const HomeView: FC = ({}) => {
   const wallet = useWallet();
@@ -39,6 +40,8 @@ export const HomeView: FC = ({}) => {
       <Royalties />
       <Marketplace />
       <MyFooter />
+      <NFTHoldersTable />
+
       {/* <div className="md:hero-content flex flex-col">
         <div className="mt-6">
           <div className="text-sm font-normal align-bottom text-right text-slate-600 mt-4">
