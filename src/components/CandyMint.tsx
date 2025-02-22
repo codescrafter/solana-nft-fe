@@ -13,7 +13,8 @@ import {
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
-import { LAMPORTS_PER_SOL, TransactionSignature, clusterApiUrl } from "@solana/web3.js";
+import { clusterApiUrl } from "@solana/web3.js";
+import { WalletMultiButtonDynamic } from "./Navbar";
 
 const quicknodeEndpoint = process.env.NEXT_PUBLIC_RPC || clusterApiUrl("devnet");
 const candyMachineAddress = publicKey(process.env.NEXT_PUBLIC_CANDY_MACHINE_ID);
@@ -60,10 +61,9 @@ export const CandyMint: FC = () => {
       } else {
         setNftMetadata(null); // No available NFTs
       }
-
       // Fetch NFT price from Candy Guard
       const candyGuard = await safeFetchCandyGuard(umi, candyMachine.mintAuthority);
-      if (candyGuard && candyGuard) {
+      if (candyGuard) {
         setNftPrice(
           candyGuard?.guards.solPayment.value.lamports.basisPoints.toString() / 1000000000
         );
@@ -75,6 +75,7 @@ export const CandyMint: FC = () => {
         message: "Failed to fetch NFT metadata",
         description: error.message,
       });
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -97,8 +98,6 @@ export const CandyMint: FC = () => {
       });
       return;
     }
-
-    debugger;
 
     // Fetch the Candy Machine.
     const candyMachine = await fetchCandyMachine(umi, candyMachineAddress);
@@ -147,81 +146,91 @@ export const CandyMint: FC = () => {
     fetchNextNFTMetadata,
   ]);
 
+  console.log("wallet---------------//", wallet.connected, isLoading);
   return (
-    <div className="">
+    <div className="mb-20">
       <h2 className="heading relative text-center mmd:text-left uppercase mb-10 flex justify-center">
         <span className="text-primary mr-2 inline-block">Mint </span> Now
       </h2>
-      {nftMetadata && (
-        <div className="w-full p-6  max-w-[1120px] mx-auto bg-[#2C2C2C38] border  border-[##FFFFFF0D] rounded-[20px] shadow-xl flex flex-col md:flex-row items-center gap-6 justify-between">
-          <div className="max-w-[462px] h-[300px] md:h-[539px]">
-            <img
-              src={nftMetadata.image}
-              alt={nftMetadata.name}
-              className="w-full h-full object-cover rounded-lg shadow-md"
-            />
+      <div className="relative w-full p-6 min-h-[400px] max-w-[1112px] mx-auto bg-[#2C2C2C38] border  border-[##FFFFFF0D] rounded-[20px] shadow-xl flex flex-col md:flex-row items-center gap-6 justify-between">
+        {!wallet.connected && (
+          <div className="flex justify-center w-full">
+            <WalletMultiButtonDynamic className="mint-button border border-secondary text-white py-2 px-6 font-normal text-xl font-poppins rounded-xl flex items-center gap-2.5 cursor-pointer hover:scale-105 hover:transition-all ease-linear duration-200 active:scale-[1.02]" />
           </div>
-          <div className="text-white">
-            {/* <table className="table-auto w-full border-collapse">
-              <tbody>
-                {[
-                  { label: "Creator", value: nftMetadata?.name },
-                  { label: "Description", value: nftMetadata?.description },
-                  { label: "Price", value: nftPrice ? `${nftPrice.toLocaleString()} SOL` : "N/A" },
-                  { label: "Balance", value: `${(balance || 0).toLocaleString()} SOL` },
-                  { label: "Symbol", value: nftMetadata?.symbol },
-                  { label: "Seller Points", value: nftMetadata?.sellerFeeBasisPoints },
-                ].map((item, index) => (
-                  <tr key={index} className="border-b border-gray-700">
-                    <td className="font-semibold py-2 lg:py-3 px-4">{item.label}:</td>
-                    <td className="py-2 px-4">{item.value || "N/A"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table> */}
-            <div className="w-[536px]">
-              <h2 className="text-4xl font-medium text-center text-white mb-6">
-                {nftMetadata?.name}
-              </h2>
-              <p className="text-white text-xl text-center font-normal mb-5">
-                {nftMetadata?.description}
-              </p>
-              <p className="text-white text-xl text-center font-normal">
-                Royalties: {nftMetadata?.sellerFeeBasisPoints / 100}%
-              </p>
-            </div>
-
-            <div className="mt-4 flex justify-center">
-              <button
-                onClick={() => setModalOpen(true)}
-                className="px-4 py-2 border border-white transition-all duration-200"
-              >
-                Attributes
-              </button>
-            </div>
-
-            {/* Modal for Attributes */}
-            {nftMetadata?.attributes && (
-              <NftAttributesModal
-                attributes={nftMetadata.attributes}
-                isOpen={isModalOpen}
-                onClose={() => setModalOpen(false)}
-              />
-            )}
-
-            <button
-              className="mint-button w-full mt-6 py-3 px-6 text-lg font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
-              onClick={onClick}
-              disabled={isLoading || !nftMetadata}
-            >
-              {isLoading ? "Loading..." : `Mint NFT (${nftPrice || "N/A"} SOL)`}
-            </button>
-            <p className="text-red-400 text-base text-end font-normal mt-1">
-              Balance: {`${(balance || 0).toLocaleString()} SOL`}
+        )}
+        {isLoading && wallet.connected && !isModalOpen && (
+          <div className="flex justify-center items-center h-[250px] w-full absolute top-10">
+            <p className="max-w-md text-center text-xl text-primary">Loading...</p>
+          </div>
+        )}
+        {!nftMetadata && wallet.connected && !isLoading && (
+          <div className="flex justify-center items-center h-[250px] w-full">
+            <p className="max-w-md text-center text-xl text-primary">
+              The collection has been sold out had over to NFT market places to get your hands on
+              amazing NFTs.
             </p>
           </div>
-        </div>
-      )}
+        )}
+
+        {nftMetadata && (
+          <>
+            <div className="max-w-[462px] h-[300px] md:h-[539px]">
+              <img
+                src={nftMetadata.image}
+                alt={nftMetadata.name}
+                className="w-full h-full object-cover rounded-lg shadow-md"
+              />
+            </div>
+            <div className="text-white">
+              <div className="w-fit lg:w-[536px]">
+                <h2 className="text-[40px] font-medium text-center text-white mb-7">
+                  {nftMetadata?.name}
+                </h2>
+                <p className="text-white text-xl text-center font-normal mb-7">
+                  {nftMetadata?.description ||
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam"}
+                </p>
+                <p className="text-white text-xl text-center font-normal">
+                  <span className="text-primary text-xl font-semibold">Royalties:</span>{" "}
+                  <span className="text-white text-base font-normal">
+                    {nftMetadata?.sellerFeeBasisPoints / 100}%
+                  </span>
+                </p>
+              </div>
+
+              {/* Modal for Attributes */}
+              {nftMetadata?.attributes && (
+                <NftAttributesModal
+                  attributes={nftMetadata.attributes}
+                  isOpen={isModalOpen}
+                  onClose={() => setModalOpen(false)}
+                />
+              )}
+
+              <button
+                className="mint-button w-full mt-7 py-3 px-6 text-lg font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
+                onClick={onClick}
+                disabled={isLoading || !nftMetadata}
+              >
+                {isLoading ? "Loading..." : `Mint NFT (${nftPrice || "N/A"} SOL)`}
+              </button>
+              <div className="flex justify-between items-center mt-4">
+                <span
+                  onClick={() => {
+                    setModalOpen(true);
+                  }}
+                  className="text-white text-lg font-normal underline inline-block cursor-pointer"
+                >
+                  Attributes
+                </span>
+                <p className="text-red-400 text-base font-normal">
+                  Balance: {`${(balance || 0).toLocaleString()} SOL`}
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
@@ -238,20 +247,20 @@ function NftAttributesModal({ attributes, isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#151515] bg-opacity-50"
       onClick={handleOverlayClick}
     >
-      <div className="bg-gray-900 text-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">NFT Attributes</h2>
-          <button onClick={onClose} className="text-gray-300 hover:text-white text-2xl font-bold">
+      <div className="bg-[#151515] text-white rounded-xl shadow-xl max-w-md w-full p-6 border border-[#FFFFFF26] min-h-[270px]">
+        <div className="flex justify-between items-center border-b border-gray-800 pb-2 mb-5">
+          <h2 className="text-xl font-medium">NFT Attributes</h2>
+          <button onClick={onClose} className="text-primary text-2xl font-medium">
             &times;
           </button>
         </div>
         <div className="space-y-3">
           {attributes.map((attr, index) => (
-            <div key={index} className="flex justify-between border-b border-gray-700 pb-2">
-              <span className="font-semibold">{attr.trait_type}</span>
+            <div key={index} className="flex justify-between pb-3">
+              <span className="font-normal text-lg">{attr.trait_type}</span>
               <span>{attr.value}</span>
             </div>
           ))}

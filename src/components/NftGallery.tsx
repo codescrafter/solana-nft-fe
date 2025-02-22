@@ -8,14 +8,14 @@ const Marketplace = () => {
       <Image
         src="/images/left-gradient.webp"
         alt="left gradient"
-        width={100}
+        width={90}
         height={500}
         className="object-contain h-full absolute left-0 top-0 hidden lg:block"
       />
       <Image
         src="/images/right-gradient.webp"
         alt="right gradient"
-        width={100}
+        width={90}
         height={500}
         className="object-contain h-full absolute right-0 top-0 hidden lg:block"
       />
